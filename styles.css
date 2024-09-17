@@ -1,0 +1,60 @@
+.wrapper {
+    width: 100%;
+    height: 100vh;
+    background-color: #ccc;
+    position: relative;
+    --hit-size: 200px;
+    --hit-speed: 2s;
+}
+
+.wrapper:has(.hit[name='lv1']:checked) {
+    --hit-size: 100px;
+    --hit-speed: 1s;
+}
+
+.bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    appearance: none;
+}
+
+.hit {
+    width: var(--hit-size);
+    height: var(--hit-size);
+    position: absolute;
+    z-index: 1;
+    display: none;
+    /* animation: slide-right var(--hit-speed) linear infinite; */
+}
+
+.hit:checked {
+    display: none !important;
+}
+
+.hit[name='lv1'] {
+    display: block;
+}
+
+.wrapper:has(.hit[name='lv1']:checked) .hit[name='lv2'] {
+    display: block;
+    top: 100px;
+}
+
+/* .wrapper:has(.hit:checked) {
+    background-color: blue;
+} */
+
+.wrapper:has(.bg:checked) {
+    background-color: #f00;
+}
+
+@keyframes slide-right {
+    from {
+        left: 0;
+    }
+    to {
+        left: 100%;
+    }
+}
