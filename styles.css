@@ -1,60 +1,485 @@
+:root {
+    --z-index-out: 1;
+    --z-index-ball: 2;
+    --z-index-modal: 100;
+    --color-primary: #ffcf00;
+    --color-base: #feefe5;
+    --color-warning: #ee6123;
+    --color-accent: #fa003f;
+}
+
+body {
+    overflow: hidden;
+    background-color: var(--color-base);
+    text-align: center;
+    font-family: sans-serif;
+}
+
 .wrapper {
-    width: 100%;
-    height: 100vh;
-    background-color: #ccc;
+    width: 100svw;
+    max-width: 600px;
+    height: 100svh;
+    margin-inline: auto;
     position: relative;
-    --hit-size: 200px;
-    --hit-speed: 2s;
+
+    /* Setting */
+    --ball-size: 50%;
+    --ball-animation: slide-down;
+    --ball-animation-duration: 5s;
+    --ball-animation-delay: 1.5s;
+
+    &:has(.ball[name='lv1']:checked) {
+        --ball-size: 40%;
+        --ball-animation-duration: 4s;
+        --ball-animation-delay: 2.5s;
+    }
+
+    &:has(.ball[name='lv2']:checked) {
+        --ball-size: 30%;
+        --ball-animation-duration: 3s;
+    }
+
+    &:has(.ball[name='lv3']:checked) {
+        --ball-size: 25%;
+        --ball-animation-duration: 2s;
+    }
+
+    &:has(.ball[name='lv4']:checked) {
+        --ball-size: 20%;
+        --ball-animation-duration: 1s;
+    }
+
+    &:has([name='start']:checked) .ball[name='lv1'],
+    &:has(.ball[name='lv1']:checked) .ball[name='lv2'],
+    &:has(.ball[name='lv2']:checked) .ball[name='lv3'],
+    &:has(.ball[name='lv3']:checked) .ball[name='lv4'],
+    &:has(.ball[name='lv4']:checked) .ball[name='lv5'] {
+        display: block;
+    }
 }
 
-.wrapper:has(.hit[name='lv1']:checked) {
-    --hit-size: 100px;
-    --hit-speed: 1s;
-}
-
-.bg {
+.out {
     position: absolute;
+    z-index: var(--z-index-out);
     inset: 0;
     width: 100%;
     height: 100%;
     appearance: none;
 }
 
-.hit {
-    width: var(--hit-size);
-    height: var(--hit-size);
+.ball {
+    width: var(--ball-size);
+    height: auto;
+    aspect-ratio: 1;
     position: absolute;
-    z-index: 1;
+    z-index: var(--z-index-ball);
     display: none;
-    /* animation: slide-right var(--hit-speed) linear infinite; */
+    border-radius: 50%;
+    appearance: none;
+    background-color: var(--color-accent);
+    left: calc(50% - var(--ball-size) / 2);
+    top: calc(0% - var(--ball-size));
+    animation: var(--ball-animation) var(--ball-animation-duration) linear
+        infinite var(--ball-animation-delay);
+
+    &:checked {
+        display: none !important;
+    }
 }
 
-.hit:checked {
+.wrapper:has(.out:checked) .ball {
     display: none !important;
 }
 
-.hit[name='lv1'] {
-    display: block;
-}
-
-.wrapper:has(.hit[name='lv1']:checked) .hit[name='lv2'] {
-    display: block;
-    top: 100px;
-}
-
-/* .wrapper:has(.hit:checked) {
-    background-color: blue;
-} */
-
-.wrapper:has(.bg:checked) {
-    background-color: #f00;
-}
-
-@keyframes slide-right {
+@keyframes slide-down {
     from {
-        left: 0;
+        top: calc(0% - var(--ball-size));
     }
     to {
-        left: 100%;
+        top: 100%;
     }
+}
+
+.modal {
+    position: fixed;
+    height: 100svh;
+    inset: 0;
+    z-index: var(--z-index-modal);
+    display: none;
+    place-items: center;
+}
+
+.start {
+    background-color: var(--color-primary);
+    color: #fff;
+    display: grid;
+
+    & > div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    span {
+        display: inline-block;
+        width: 80px;
+        aspect-ratio: 1;
+        background-color: #fff;
+        border-radius: 50%;
+        transform: skew(-10deg);
+    }
+
+    .button {
+        margin-top: 2.5rem;
+        cursor: pointer;
+        color: var(--color-primary);
+    }
+}
+
+.title {
+    font-size: 3.2rem;
+    font-weight: bold;
+    transform: skew(-15deg);
+    text-align: left;
+    margin-left: 1rem;
+}
+
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 180px;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    font-size: 1.4rem;
+    font-weight: bold;
+    background: #fff;
+    border: none;
+    appearance: none;
+}
+
+.button input {
+    display: none;
+}
+
+.wrapper:has([name='start']:checked) .start {
+    display: none;
+}
+
+.clear {
+    background-color: var(--color-primary);
+    color: #fff;
+    font-size: 3rem;
+    font-weight: bold;
+
+    & > div {
+        grid-column: 1 / -1;
+        grid-row: 1 / -1;
+    }
+
+    span {
+        display: inline-block;
+        animation: text-in-clear 1.5s ease-in-out forwards var(--delay);
+        opacity: 0;
+    }
+}
+
+@keyframes text-in-clear {
+    0% {
+        opacity: 0;
+        translate: 0 30px;
+        scale: 0.9;
+    }
+    20% {
+        opacity: 1;
+        translate: 0;
+        scale: 1;
+    }
+    80% {
+        opacity: 1;
+        translate: 0;
+        scale: 1;
+    }
+    100% {
+        opacity: 0;
+        translate: 0 -30px;
+        scale: 0.9;
+    }
+}
+
+.wrapper:has([name='start']:checked) .clear[data-lv='0'] {
+    display: grid;
+    animation: slide-out 0.4s ease-in-out forwards 1.5s;
+}
+
+.wrapper:has(.ball[name='lv1']:checked) .clear[data-lv='1'],
+.wrapper:has(.ball[name='lv2']:checked) .clear[data-lv='2'],
+.wrapper:has(.ball[name='lv3']:checked) .clear[data-lv='3'],
+.wrapper:has(.ball[name='lv4']:checked) .clear[data-lv='4'] {
+    display: grid;
+    animation: slide-out 0.4s ease-in-out forwards 3s;
+}
+
+.wrapper:has(.ball[name='lv5']:checked) .allClear {
+    background-color: var(--color-primary);
+    color: #fff;
+    font-size: 3rem;
+    font-weight: bold;
+    display: grid;
+
+    & > div {
+        grid-column: 1 / -1;
+        grid-row: 1 / -1;
+    }
+
+    .text span {
+        display: inline-block;
+        animation: text-in-all-clear 0.4s ease-in-out forwards var(--delay);
+        opacity: 0;
+    }
+}
+
+@keyframes text-in-all-clear {
+    0% {
+        opacity: 0;
+        translate: 0 30px;
+        scale: 0.9;
+    }
+    100% {
+        opacity: 1;
+        translate: 0 0;
+        scale: 1;
+    }
+}
+
+@keyframes slide-out {
+    from {
+        top: 0;
+    }
+    to {
+        top: -100%;
+    }
+}
+
+.miss {
+    background-color: var(--color-warning);
+    color: #fff;
+    font-size: 3rem;
+    font-weight: bold;
+
+    span {
+        letter-spacing: 0.2em;
+    }
+
+    .button {
+        margin-top: 3rem;
+        cursor: pointer;
+        color: var(--color-warning);
+    }
+}
+
+.wrapper:has(.out:checked) .miss {
+    display: grid;
+}
+
+/*紙吹雪のスタイル*/
+.confetti {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.confetti span {
+    position: absolute;
+    z-index: 200;
+    opacity: 1 !important;
+    top: -100%; /*アニメーション以外の紙吹雪を非表示*/
+    left: 0;
+}
+
+/*アニメーションの記述*/
+.confetti span:nth-child(2n + 1) {
+    animation: confetti1 5s 0s linear infinite;
+}
+
+.confetti span:nth-child(2n + 2) {
+    animation: confetti2 5s 0s linear infinite;
+}
+
+/*紙吹雪を回転させる記述*/
+@keyframes confetti1 {
+    0% {
+        top: -10%;
+        transform: translateX(0) rotateX(0) rotateY(0);
+    }
+
+    100% {
+        top: 100%;
+        transform: translateX(20px) rotateX(180deg) rotateY(360deg);
+    }
+}
+
+@keyframes confetti2 {
+    0% {
+        top: -10%;
+        transform: translateX(0) rotateX(0) rotateY(0);
+    }
+
+    100% {
+        top: 100%;
+        transform: translateX(-20vw) rotateX(180deg) rotateY(360deg);
+    }
+}
+
+/*紙吹雪の配置*/
+.confetti span:nth-child(1) {
+    left: 0%;
+}
+
+.confetti span:nth-child(2) {
+    left: 10%;
+}
+
+.confetti span:nth-child(3) {
+    left: 20%;
+}
+
+.confetti span:nth-child(4) {
+    left: 30%;
+}
+
+.confetti span:nth-child(5) {
+    left: 40%;
+}
+
+.confetti span:nth-child(6) {
+    left: 50%;
+}
+
+.confetti span:nth-child(7) {
+    left: 60%;
+}
+
+.confetti span:nth-child(8) {
+    left: 70%;
+}
+
+.confetti span:nth-child(9) {
+    left: 80%;
+}
+
+.confetti span:nth-child(10) {
+    left: 90%;
+}
+
+.confetti span:nth-child(11) {
+    left: 100%;
+}
+
+/*紙吹雪の大きさ*/
+.confetti span:nth-child(3n + 1) {
+    width: 3vw;
+    height: 3vw;
+}
+
+.confetti span:nth-child(3n + 2) {
+    width: 2vw;
+    height: 2vw;
+}
+
+.confetti span:nth-child(3n + 3) {
+    width: 1.5vw;
+    height: 1.5w;
+}
+
+/*紙吹雪の色*/
+.confetti span:nth-child(2n + 1) {
+    background: rgb(255 255 255 / 100%);
+}
+
+.confetti span:nth-child(2n + 2) {
+    background: rgb(255 255 255 / 90%);
+}
+
+.confetti span:nth-child(2n + 3) {
+    background: rgb(255 255 255 / 80%);
+}
+
+.confetti span:nth-child(2n + 4) {
+    background: rgb(255 255 255 / 70%);
+}
+
+.confetti span:nth-child(2n + 5) {
+    background: rgb(255 255 255 / 60%);
+}
+
+.confetti span:nth-child(2n + 6) {
+    background: rgb(255 255 255 / 50%);
+}
+
+.confetti span:nth-child(2n + 7) {
+    background: rgb(255 255 255 / 40%);
+}
+
+/*アニメーションの秒数*/
+.confetti span:nth-child(2n + 1) {
+    animation-duration: 5s;
+}
+
+.confetti span:nth-child(2n + 2) {
+    animation-duration: 6s;
+}
+
+.confetti span:nth-child(2n + 3) {
+    animation-duration: 10s;
+}
+
+.confetti span:nth-child(2n + 4) {
+    animation-duration: 4s;
+}
+
+/*紙吹雪が降り始めるまでの時間*/
+.confetti span:nth-child(2n + 1) {
+    animation-delay: 0s;
+}
+
+.confetti span:nth-child(2n + 2) {
+    animation-delay: 4s;
+}
+
+.confetti span:nth-child(2n + 3) {
+    animation-delay: 6s;
+}
+
+.confetti span:nth-child(2n + 4) {
+    animation-delay: 2s;
+}
+
+.confetti span:nth-child(2n + 5) {
+    animation-delay: 6s;
+}
+
+.confetti span:nth-child(2n + 6) {
+    animation-delay: 10s;
+}
+
+.confetti span:nth-child(2n + 7) {
+    animation-delay: 2s;
+}
+
+.confetti span:nth-child(2n + 8) {
+    animation-delay: 4s;
+}
+
+.confetti span:nth-child(2n + 9) {
+    animation-delay: 11s;
+}
+
+.confetti span:nth-child(2n + 10) {
+    animation-delay: 1s;
+}
+
+.confetti span:nth-child(2n + 11) {
+    animation-delay: 5s;
 }
