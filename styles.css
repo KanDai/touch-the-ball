@@ -178,6 +178,10 @@ body {
         grid-row: 1 / -1;
     }
 
+    &.retry > div:first-child {
+        display: none;
+    }
+
     span {
         display: inline-block;
         animation: text-in-clear 1.5s ease-in-out forwards var(--delay);

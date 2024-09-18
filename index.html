@@ -200,7 +200,7 @@
             <div class="miss modal">
                 <div>
                     <div>MISS!!</div>
-                    <button type="button" class="button" onclick="reset()">
+                    <button type="button" class="button" onclick="retry()">
                         Retry
                     </button>
                 </div>
@@ -208,13 +208,26 @@
         </div>
 
         <script>
-            const reset = () => {
+            const retry = () => {
+                const clearedLevel =
+                    document.querySelectorAll('.ball:checked').length
+
                 document.querySelector('.start').style.display = 'none'
                 document
                     .querySelectorAll('input[type="checkbox"]')
                     .forEach((checkbox) => (checkbox.checked = false))
                 setTimeout(() => {
                     document.querySelector('[name="start"]').checked = true
+                    document
+                        .querySelector(`.clear[data-lv="${clearedLevel}"]`)
+                        .classList.add('retry')
+                    document
+                        .querySelectorAll('.ball')
+                        .forEach((ball, index) => {
+                            if (index < clearedLevel) {
+                                ball.checked = true
+                            }
+                        })
                 }, 0)
             }
         </script>
