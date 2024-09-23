@@ -21,21 +21,21 @@
                         the ball
                     </h1>
                     <label class="button">
-                        <input type="checkbox" name="start" class="button" />
+                        <input type="checkbox" name="start" />
                         Start
                     </label>
                 </div>
             </div>
 
             <!-- Out area -->
-            <input type="checkbox" name="out" class="out" />
+            <input type="radio" name="playableState" value="miss" class="out" />
 
             <!-- Ball -->
-            <input type="checkbox" name="lv1" class="ball" />
-            <input type="checkbox" name="lv2" class="ball" />
-            <input type="checkbox" name="lv3" class="ball" />
-            <input type="checkbox" name="lv4" class="ball" />
-            <input type="checkbox" name="lv5" class="ball" />
+            <input type="radio" name="ball" value="lv1" class="ball" />
+            <input type="radio" name="ball" value="lv2" class="ball" />
+            <input type="radio" name="ball" value="lv3" class="ball" />
+            <input type="radio" name="ball" value="lv4" class="ball" />
+            <input type="radio" name="ball" value="lv5" class="ball" />
 
             <!-- Clear modal -->
             <div class="clear modal" data-lv="0">
@@ -200,36 +200,54 @@
             <div class="miss modal">
                 <div>
                     <div>MISS!!</div>
-                    <button type="button" class="button" onclick="retry()">
-                        Retry
-                    </button>
+
+                    <label class="button -lv1">
+                        <input
+                            type="radio"
+                            name="playableState"
+                            value="lv1_retry"
+                            class="retry"
+                        />
+                        Lv1 Retry
+                    </label>
+                    <label class="button -lv2">
+                        <input
+                            type="radio"
+                            name="playableState"
+                            value="lv2_retry"
+                            class="retry"
+                        />
+                        Lv2 Retry
+                    </label>
+                    <label class="button -lv3">
+                        <input
+                            type="radio"
+                            name="playableState"
+                            value="lv3_retry"
+                            class="retry"
+                        />
+                        Lv3 Retry
+                    </label>
+                    <label class="button -lv4">
+                        <input
+                            type="radio"
+                            name="playableState"
+                            value="lv4_retry"
+                            class="retry"
+                        />
+                        Lv4 Retry
+                    </label>
+                    <label class="button -lv5">
+                        <input
+                            type="radio"
+                            name="playableState"
+                            value="lv5_retry"
+                            class="retry"
+                        />
+                        Lv5 Retry
+                    </label>
                 </div>
             </div>
         </div>
-
-        <script>
-            const retry = () => {
-                const clearedLevel =
-                    document.querySelectorAll('.ball:checked').length
-
-                document.querySelector('.start').style.display = 'none'
-                document
-                    .querySelectorAll('input[type="checkbox"]')
-                    .forEach((checkbox) => (checkbox.checked = false))
-                setTimeout(() => {
-                    document.querySelector('[name="start"]').checked = true
-                    document
-                        .querySelector(`.clear[data-lv="${clearedLevel}"]`)
-                        .classList.add('retry')
-                    document
-                        .querySelectorAll('.ball')
-                        .forEach((ball, index) => {
-                            if (index < clearedLevel) {
-                                ball.checked = true
-                            }
-                        })
-                }, 0)
-            }
-        </script>
     </body>
 </html>

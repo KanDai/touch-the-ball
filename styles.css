@@ -28,33 +28,28 @@ body {
     --ball-animation-duration: 5s;
     --ball-animation-delay: 1.5s;
 
-    &:has(.ball[name='lv1']:checked) {
-        --ball-size: 40%;
-        --ball-animation-duration: 4s;
+    &:has(.ball[value^='lv']:checked) {
         --ball-animation-delay: 2.5s;
     }
 
-    &:has(.ball[name='lv2']:checked) {
+    &:has(.ball[value='lv1']:checked) {
+        --ball-size: 40%;
+        --ball-animation-duration: 4s;
+    }
+
+    &:has(.ball[value='lv2']:checked) {
         --ball-size: 30%;
         --ball-animation-duration: 3s;
     }
 
-    &:has(.ball[name='lv3']:checked) {
+    &:has(.ball[value='lv3']:checked) {
         --ball-size: 25%;
         --ball-animation-duration: 2s;
     }
 
-    &:has(.ball[name='lv4']:checked) {
+    &:has(.ball[value='lv4']:checked) {
         --ball-size: 20%;
         --ball-animation-duration: 1s;
-    }
-
-    &:has([name='start']:checked) .ball[name='lv1'],
-    &:has(.ball[name='lv1']:checked) .ball[name='lv2'],
-    &:has(.ball[name='lv2']:checked) .ball[name='lv3'],
-    &:has(.ball[name='lv3']:checked) .ball[name='lv4'],
-    &:has(.ball[name='lv4']:checked) .ball[name='lv5'] {
-        display: block;
     }
 }
 
@@ -82,9 +77,14 @@ body {
     animation: var(--ball-animation) var(--ball-animation-duration) linear
         infinite var(--ball-animation-delay);
 
-    &:checked {
-        display: none !important;
+    &[value='lv1'],
+    &:checked + .ball {
+        display: block;
     }
+}
+
+.wrapper:has(.ball[value^='lv']:checked) .ball[value='lv1'] {
+    display: none;
 }
 
 .wrapper:has(.out:checked) .ball {
@@ -178,10 +178,6 @@ body {
         grid-row: 1 / -1;
     }
 
-    &.retry > div:first-child {
-        display: none;
-    }
-
     span {
         display: inline-block;
         animation: text-in-clear 1.5s ease-in-out forwards var(--delay);
@@ -212,20 +208,33 @@ body {
     }
 }
 
+.wrapper:has(.out:checked) .clear {
+    display: none !important;
+}
+
 .wrapper:has([name='start']:checked) .clear[data-lv='0'] {
     display: grid;
     animation: slide-out 0.4s ease-in-out forwards 1.5s;
 }
 
-.wrapper:has(.ball[name='lv1']:checked) .clear[data-lv='1'],
-.wrapper:has(.ball[name='lv2']:checked) .clear[data-lv='2'],
-.wrapper:has(.ball[name='lv3']:checked) .clear[data-lv='3'],
-.wrapper:has(.ball[name='lv4']:checked) .clear[data-lv='4'] {
+.wrapper:has(.ball[value='lv1']:checked) .clear[data-lv='1'],
+.wrapper:has(.ball[value='lv2']:checked) .clear[data-lv='2'],
+.wrapper:has(.ball[value='lv3']:checked) .clear[data-lv='3'],
+.wrapper:has(.ball[value='lv4']:checked) .clear[data-lv='4'] {
     display: grid;
     animation: slide-out 0.4s ease-in-out forwards 3s;
 }
 
-.wrapper:has(.ball[name='lv5']:checked) .allClear {
+.wrapper:has([value='lv2_retry']:checked) .clear[data-lv='1'] > div:first-child,
+.wrapper:has([value='lv3_retry']:checked) .clear[data-lv='2'] > div:first-child,
+.wrapper:has([value='lv4_retry']:checked) .clear[data-lv='3'] > div:first-child,
+.wrapper:has([value='lv5_retry']:checked)
+    .clear[data-lv='4']
+    > div:first-child {
+    display: none;
+}
+
+.wrapper:has(.ball[value='lv5']:checked) .allClear {
     background-color: var(--color-primary);
     color: #fff;
     font-size: 3rem;
@@ -277,14 +286,30 @@ body {
     }
 
     .button {
+        display: none;
         margin-top: 3rem;
         cursor: pointer;
         color: var(--color-warning);
+
+        &.-lv1 {
+            display: inline-flex;
+        }
     }
 }
 
 .wrapper:has(.out:checked) .miss {
     display: grid;
+}
+
+.wrapper:has(.ball[value^='lv']:checked) .miss .button.-lv1 {
+    display: none;
+}
+
+.wrapper:has(.ball[value='lv1']:checked) .miss .button.-lv2,
+.wrapper:has(.ball[value='lv2']:checked) .miss .button.-lv3,
+.wrapper:has(.ball[value='lv3']:checked) .miss .button.-lv4,
+.wrapper:has(.ball[value='lv4']:checked) .miss .button.-lv5 {
+    display: inline-flex;
 }
 
 /*紙吹雪のスタイル*/
