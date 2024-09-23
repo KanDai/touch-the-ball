@@ -77,14 +77,17 @@ body {
     animation: var(--ball-animation) var(--ball-animation-duration) linear
         infinite var(--ball-animation-delay);
 
-    &[value='lv1'],
     &:checked + .ball {
         display: block;
     }
 }
 
+.wrapper:has([name='start']:checked) .ball[value='lv1'] {
+    display: block;
+}
+
 .wrapper:has(.ball[value^='lv']:checked) .ball[value='lv1'] {
-    display: none;
+    display: none !important;
 }
 
 .wrapper:has(.out:checked) .ball {
